@@ -126,7 +126,9 @@ def main():
             #         lock_exit.release()
 
             #         dg_connection.send(data)
-            while not len(audio_queue) == 0:
+            while True:
+                if len(audio_queue) == 0:
+                    continue
                 data = audio_queue.pop(0)
                 lock_exit.acquire()
                 if exit:
@@ -137,19 +139,8 @@ def main():
 
 
         # STEP 9: Start the thread
-        # audio_thread = threading.Thread(target=myThread)
-        # audio_thread.start()
-
-        while True:
-            if len(audio_queue) == 0:
-                continue
-            data = audio_queue.pop(0)
-            lock_exit.acquire()
-            if exit:
-                break
-            lock_exit.release()
-
-            dg_connection.send(data)
+        audio_thread = threading.Thread(target=myThread)
+        audio_thread.start()
 
         # STEP 10: Wait for user input to stop recording
         input("Press Enter to stop recording...\n\n")
@@ -160,7 +151,7 @@ def main():
         lock_exit.release()
 
         # STEP 12: Wait for the thread to finish
-        # audio_thread.join()
+        audio_thread.join()
 
         # STEP 13: Close the connection to Deepgram
         dg_connection.finish()
