@@ -1,3 +1,4 @@
 python-dotenv
 deepgram-sdk
 PyAudio
+openai
