@@ -1,9 +1,7 @@
 import os
-import httpx
 from dotenv import load_dotenv
 import threading
 import pyaudio
-import asyncio
 
 from deepgram import (
     DeepgramClient,
