@@ -1,3 +1,5 @@
+#! /home/usr-1/.pyenv/versions/3.11.9/bin/python
+
 import rospy
 from std_msgs.msg import String
 import os
@@ -5,11 +7,8 @@ from dotenv import load_dotenv
 import threading
 import pyaudio
 
-from deepgram import (
-    DeepgramClient,
-    LiveTranscriptionEvents,
-    LiveOptions,
-)
+from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions
+
 
 load_dotenv()
 
@@ -174,6 +173,8 @@ def stt():
 
         rospy.on_shutdown(on_node_shutdown)
 
+        while not rospy.is_shutdown():
+            rate.sleep()
 
     except Exception as e:
         rospy.logwarn(f"STT Node Error: {str(e)}")

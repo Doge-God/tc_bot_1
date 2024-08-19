@@ -1,4 +1,7 @@
 python-dotenv
 deepgram-sdk
-PyAudio
 openai
+##
+pyyaml
+rospkg
+catkin_pkg

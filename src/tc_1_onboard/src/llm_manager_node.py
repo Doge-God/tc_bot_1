@@ -1,3 +1,9 @@
+#! /usr/local/bin/pip3.12
+
+# /usr/bin/env python
+
+
+
 import rospy
 from std_msgs.msg import String
 import os
@@ -22,7 +28,7 @@ def create_assist_msg(msg:str):
 
 def get_gpt_response(messages):
         global message_log
-        completion = open_ai_client.chat.completions.create(model="ft:gpt-3.5-turbo-0613:personal::9OyKZxFA", messages=messages)
+        completion = open_ai_client.chat.completions.create(model="gpt-4o-mini", messages=messages)
         gpt_msg = completion.choices[0].message.content.strip()
 
         # if "IGNORE" in gpt_msg:
@@ -50,6 +56,14 @@ def llm_manager():
     rospy.loginfo(".. Initializing LLM Manager Node")
     rospy.Subscriber("stt_sentence", String, on_user_speech)
 
+    while not rospy.is_shutdown():
+        rate.sleep()
+
+if __name__ == '__main__':
+    try:
+        llm_manager()
+    except rospy.ROSInterruptException:
+         pass
     
 
     

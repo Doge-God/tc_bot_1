@@ -1,5 +1,12 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(tc_1_onboard)
+#catkin_package(
+  #INCLUDE_DIRS include
+#   LIBRARIES tc_1_onboard
+#   CATKIN_DEPENDS rospy std_msgs
+#   #DEPENDS system_lib
+# )
+
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -11,6 +18,10 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
 )
+
+# install(PROGRAMS src/llm_manager_node.py src/stt_node.py
+#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+# )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
