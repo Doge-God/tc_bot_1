@@ -49,14 +49,7 @@ sudo apt-get install -y ros-noetic-kobuki-ftdi
 
 make deps
 make -f Makefile
-rm -rf Makefile
 
-notice "*************************Camera libraries*************************"
-cd src
-notice "***********Receive camera packages**********"
-git clone https://github.com/UoA-CARES/ros_astra_camera.git
-git clone https://github.com/UoA-CARES/astra_camera_launch.git
-cd ..
 notice "***********Installing libuvc**********"
 sudo apt-get install -y ros-noetic-libuvc-camera ros-noetic-libuvc-ros
 notice "***********Compiling camera packages**********"
@@ -65,5 +58,3 @@ catkin_make --pkg astra_launch
 echo export TURTLEBOT_BASE=kobuki >> ~/.bashrc
 echo export TURTLEBOT_3D_SENSOR=astra >> ~/.bashrc
 source ~/.bashrc
-notice "*************************The environment for COMPSYS732 is successfully installed*************************"
-
