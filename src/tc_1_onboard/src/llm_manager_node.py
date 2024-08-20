@@ -1,8 +1,8 @@
-#! /usr/local/bin/pip3.12
+#! /usr/local/bin/python3.10
 
-# /usr/bin/env python
+# 
 
-
+# /usr/bin/python3
 
 import rospy
 from std_msgs.msg import String
@@ -48,6 +48,7 @@ def on_user_speech(data):
         global message_log
         message_log.append(create_user_msg(str(data.data)))
         response = get_gpt_response(message_log)
+        rospy.loginfo(str(data.data))
         rospy.loginfo(response)
 
 def llm_manager():

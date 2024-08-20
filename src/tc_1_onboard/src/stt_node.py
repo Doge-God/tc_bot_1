@@ -1,4 +1,8 @@
-#! /home/usr-1/.pyenv/versions/3.11.9/bin/python
+#! /usr/local/bin/python3.10
+
+#
+
+# /usr/bin/python3
 
 import rospy
 from std_msgs.msg import String
