@@ -58,3 +58,5 @@ catkin_make --pkg astra_launch
 echo export TURTLEBOT_BASE=kobuki >> ~/.bashrc
 echo export TURTLEBOT_3D_SENSOR=astra >> ~/.bashrc
 source ~/.bashrc
+
+notice ".. DONE .."

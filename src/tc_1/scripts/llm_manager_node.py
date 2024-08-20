@@ -9,13 +9,14 @@ from std_msgs.msg import String
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
+import subprocess
 
 load_dotenv()
 
 OPEN_AI_KEY = os.getenv("OPEN_AI_KEY")
 SYSTEM_PROMPT = {
     "role": "system",
-    "content": "You are a helpful robot."
+    "content": "You are a robot. You talk like HAL9000 but friendly."
 }
 message_log = []
 open_ai_client = OpenAI(api_key=OPEN_AI_KEY)
@@ -50,6 +51,8 @@ def on_user_speech(data):
         response = get_gpt_response(message_log)
         rospy.loginfo(str(data.data))
         rospy.loginfo(response)
+        subprocess.run(["espeak", f"{response}"])
+
 
 def llm_manager():
     rospy.init_node("llm_manager")
