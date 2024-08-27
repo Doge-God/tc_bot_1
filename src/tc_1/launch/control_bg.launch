@@ -1,0 +1,16 @@
+<launch>
+
+    
+
+    <group ns="camera">
+
+        <include
+            file="$(find rgbd_launch)/launch/includes/depth.launch.xml">
+
+            <arg name="manager" value="camera_nodelet_manager" />
+            <arg name="respawn" value="false" />
+            <arg name="depth"   value="depth" />
+            <arg name="queue_size" value="5" />
+        </include>
+    </group>
+</launch>
