@@ -10,13 +10,14 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 import subprocess
+from tc_1.srv import SttControl
 
 load_dotenv()
 
 OPEN_AI_KEY = os.getenv("OPEN_AI_KEY")
 SYSTEM_PROMPT = {
     "role": "system",
-    "content": "You are a robot. You talk like HAL9000 but friendly."
+    "content": "You are a robot. You give very brief responses. Omit any formatting like **."
 }
 message_log = []
 open_ai_client = OpenAI(api_key=OPEN_AI_KEY)
@@ -46,12 +47,24 @@ def get_gpt_response(messages):
         return gpt_msg
 
 def on_user_speech(data):
-        global message_log
-        message_log.append(create_user_msg(str(data.data)))
-        response = get_gpt_response(message_log)
-        rospy.loginfo(str(data.data))
-        rospy.loginfo(response)
-        subprocess.run(["espeak", f"{response}"])
+    rospy.wait_for_service("stt_control")
+    set_stt_active = rospy.ServiceProxy("stt_control", SttControl)
+    set_stt_active(False)
+
+    # ignore null or extrememly short cut-off words
+    if len(str(data.data)) <= 4:
+        return
+
+    global message_log
+    message_log.append(create_user_msg(str(data.data)))
+    response = get_gpt_response(message_log)
+    rospy.loginfo(str(data.data))
+    rospy.loginfo(response)
+
+    subprocess.run(["espeak", f"{response}"])
+    set_stt_active(True)
+
+
 
 
 def llm_manager():

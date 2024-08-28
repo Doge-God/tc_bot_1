@@ -13,6 +13,8 @@ import pyaudio
 
 from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions
 
+from tc_1.srv import SttControl, SttControlResponse
+
 
 load_dotenv()
 
@@ -53,10 +55,15 @@ dg_options = LiveOptions(
 )
 #################################
 
+def handle_toggle_recording(req):
+    global is_pausing
+    is_pausing = not req.isSttActive
+    rospy.loginfo(f"stt node control recieved, pausing = {is_pausing}")
+    return SttControlResponse(not is_pausing)
+
 def mic_callback(input_data, frame_count, time_info, status_flag):
     audio_queue.append(input_data)
     return (input_data, pyaudio.paContinue)
-
 
 
 def stt():
@@ -64,6 +71,7 @@ def stt():
     global dg_options
     global is_exiting
     global is_pausing
+    global audio_queue
 
     #################################################
     ## Node setup ###################################
@@ -72,6 +80,7 @@ def stt():
     rate = rospy.Rate(10)
     rospy.loginfo(".. Initializing STT Node")
     stt_sentence_pub = rospy.Publisher('stt_sentence', String, queue_size=10)
+    stt_control_service = rospy.Service('stt_control', SttControl, handle_toggle_recording)
 
     #################################################
     ## STT setup ####################################
@@ -89,6 +98,8 @@ def stt():
         )
 
         stream.start_stream()
+
+
 
         # Create a Deepgram client and connection
         deepgram = DeepgramClient(API_KEY)
@@ -130,6 +141,7 @@ def stt():
 
         # Audio loop to send audio to deepgram
         def audio_send_loop():
+            global audio_queue
             while True:
                 # get data from audio queue
                 if len(audio_queue) == 0:
@@ -144,8 +156,12 @@ def stt():
                 # lock pause flag and check for pause
                 lock_pause.acquire()
                 if is_pausing:
+                    audio_queue=[]
+                    dg_connection.keep_alive()
+                    lock_pause.release()
                     continue
                 lock_pause.release()
+                
 
                 # send data over stream
                 dg_connection.send(data)

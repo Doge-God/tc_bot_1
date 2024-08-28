@@ -1,6 +1,14 @@
 <launch>
     <include file="$(find turtlebot_bringup)/launch/minimal.launch"/>
-    <include file="$(find astra_launch)/launch/astra.launch"/>
+    <!-- <include file="$(find astra_launch)/launch/astra.launch">
+        <arg name="rgb_processing"                  default="false"  />
+        <arg name="debayer_processing"              default="false" />
+        <arg name="ir_processing"                   default="false" />
+        <arg name="depth_processing"                default="false" />
+        <arg name="depth_registered_processing"     default="false" />
+        <arg name="disparity_processing"            default="false" />
+        <arg name="disparity_registered_processing" default="false" />
+    </include> -->
     <!-- <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch" /> -->
 
     <node

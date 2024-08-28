@@ -1,11 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(tc_1)
-#catkin_package(
-  #INCLUDE_DIRS include
-#   LIBRARIES tc_1_onboard
-#   CATKIN_DEPENDS rospy std_msgs
-#   #DEPENDS system_lib
-# )
 
 
 ## Compile as C++11, supported in ROS Kinetic and newer
@@ -17,6 +11,7 @@ project(tc_1)
 find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
+  message_generation
 )
 
 # install(PROGRAMS src/llm_manager_node.py src/stt_node.py
@@ -64,11 +59,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+  FILES
+  SttControl.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -78,10 +72,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
