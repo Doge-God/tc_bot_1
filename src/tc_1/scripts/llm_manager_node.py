@@ -18,7 +18,7 @@ load_dotenv()
 OPEN_AI_KEY = os.getenv("OPEN_AI_KEY")
 system_prompt = {
     "role": "system",
-    "content": "You are a robot. You give very brief responses. Omit any formatting like **."
+    "content": "You are a robot. You talk like Hal9000. You give very brief responses. Omit any formatting in your response."
 }
 message_log = deque([], maxlen=30)
 open_ai_client = OpenAI(api_key=OPEN_AI_KEY)
@@ -35,9 +35,8 @@ def create_system_prompt(msg:str):
 
 def llm_manager():
     rospy.init_node("llm_manager")
-    rate = rospy.Rate(10)
     rospy.loginfo(".. Initializing LLM Manager Node")
-    rospy.Subscriber("stt_sentence", String, on_user_speech)
+    rate = rospy.Rate(10)
     llm_sentence_pub = rospy.Publisher("llm_sentence",String, queue_size=10)
 
 
@@ -66,10 +65,14 @@ def llm_manager():
 
         global message_log, system_prompt
         message_log.append(create_user_msg(str(data.data)))
-        response = get_gpt_response([system_prompt].extend(message_log))
+        message_log_w_sys_prompt = [system_prompt]
+        message_log_w_sys_prompt.extend(list(message_log))
+
+        response = get_gpt_response(message_log_w_sys_prompt)
 
         llm_sentence_pub.publish(response)
 
+    rospy.Subscriber("stt_sentence", String, on_user_speech)
 
     while not rospy.is_shutdown():
         rate.sleep()
