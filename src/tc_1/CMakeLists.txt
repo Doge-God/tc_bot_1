@@ -14,7 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
 )
 
-# install(PROGRAMS src/llm_manager_node.py src/stt_node.py
+# install(PROGRAMS scripts/llm_manager_node.py scripts/stt_node.py scripts/tts_node.py
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 

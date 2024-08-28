@@ -15,7 +15,8 @@ from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions
 
 from tc_1.srv import SttControl, SttControlResponse
 
-
+import rospy
+from std_msgs.msg import String
 load_dotenv()
 
 API_KEY = os.getenv("DEEPGRAM_KEY")
@@ -197,7 +198,7 @@ def stt():
             rate.sleep()
 
     except Exception as e:
-        rospy.logwarn(f"STT Node Error: {str(e)}")
+        rospy.logfatal(f"STT Node Error: {str(e)}")
         return
 
 
