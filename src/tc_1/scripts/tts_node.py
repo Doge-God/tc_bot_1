@@ -5,11 +5,10 @@ from std_msgs.msg import String
 from tc_1.srv import SttControl
 import subprocess
 
-set_stt_active = rospy.ServiceProxy("stt_control", SttControl)
 
 def on_llm_response(data):
-    global set_stt_active
     try:
+        set_stt_active = rospy.ServiceProxy("stt_control", SttControl)
         set_stt_active(False)
     except rospy.ServiceException:
         rospy.logwarn("TTS: failed to deactivate STT.")
@@ -20,6 +19,7 @@ def on_llm_response(data):
     subprocess.run(["espeak", str(data.data)])
 
     try:
+        set_stt_active = rospy.ServiceProxy("stt_control", SttControl)
         set_stt_active(True)
     except rospy.ServiceException:
         rospy.logwarn("TTS: failed to activate STT.")
