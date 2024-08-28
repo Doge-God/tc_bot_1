@@ -61,7 +61,7 @@ def llm_manager():
 
     # setup inject_user_input service
     def handle_inject_user_input(req):
-        fake_user_input = str(req.data)
+        fake_user_input = str(req.fakeUserInput)
         stt_sentence_pub.publish(fake_user_input)
         return InjectUserInputResponse("success")
     rospy.Service("inject_user_input", InjectUserInput, handle_inject_user_input)
@@ -69,7 +69,7 @@ def llm_manager():
     # setup inject_llm_response service
     def handle_inject_llm_response(req):
         global message_log
-        fake_llm_response = str(req.data)
+        fake_llm_response = str(req.fakeLLMResponse)
         message_log.append(create_assist_msg(fake_llm_response))
         try:
             set_stt_active = rospy.ServiceProxy("stt_control", SttControl)
@@ -82,18 +82,18 @@ def llm_manager():
 
 
     def get_gpt_response(messages):
-            global message_log, interaction_system_prompt
-            completion = open_ai_client.chat.completions.create(model="gpt-4o-mini", messages=messages)
-            gpt_msg = completion.choices[0].message.content.strip()
+        global message_log, interaction_system_prompt
+        completion = open_ai_client.chat.completions.create(model="gpt-4o-mini", messages=messages)
+        gpt_msg = completion.choices[0].message.content.strip()
 
-            message_log.append(create_assist_msg(gpt_msg))
-            
-            # if (len(message_log) >= 25):
-            #     message_log.pop(0)
-            #     message_log.pop(0)
-            #     message_log.insert(0,system_prompt)
+        message_log.append(create_assist_msg(gpt_msg))
+        
+        # if (len(message_log) >= 25):
+        #     message_log.pop(0)
+        #     message_log.pop(0)
+        #     message_log.insert(0,system_prompt)
 
-            return gpt_msg
+        return gpt_msg
 
     def on_user_speech(data):
 
@@ -105,6 +105,11 @@ def llm_manager():
 
         # ignore null or extrememly short cut-off words
         if len(str(data.data)) <= 4:
+            try:
+                set_stt_active = rospy.ServiceProxy("stt_control", SttControl)
+                set_stt_active(True)
+            except:
+                rospy.logwarn("LLM Manager: STT control failed.")
             return
 
         global message_log, interaction_system_prompt

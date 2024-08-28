@@ -1,7 +1,5 @@
 <launch>
 
-    
-
     <group ns="camera">
 
         <include
@@ -13,4 +11,14 @@
             <arg name="queue_size" value="5" />
         </include>
     </group>
+
+    <node 
+        pkg="tc_1"
+        type="llm_manager_node.py"
+        name="llm_manager_node"
+        output="screen"
+    />
+
+    <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch" />
+
 </launch>
