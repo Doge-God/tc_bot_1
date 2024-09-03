@@ -65,6 +65,7 @@ add_service_files(
   InjectLLMResponse.srv
   InjectUserInput.srv
   UpdateVisualContext.srv
+  UpdateSystemPrompt.srv
 )
 
 ## Generate actions in the 'action' folder
