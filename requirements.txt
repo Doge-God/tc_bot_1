@@ -5,3 +5,5 @@ openai
 pyyaml
 rospkg
 catkin_pkg
+
+#numpy==2.1.0
