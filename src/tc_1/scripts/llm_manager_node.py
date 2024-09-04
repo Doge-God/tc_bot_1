@@ -26,13 +26,13 @@ load_dotenv()
 class LLMManager():
     def __init__(self) -> None:
         self.OPEN_AI_KEY = os.getenv("OPEN_AI_KEY")
-        self.INTERACTION_BASE_SYSTEM_PROMPT = "You are a robot, you can hear, see, and move around. You give very brief responses. Omit any formatting in your response."
+        # self.INTERACTION_BASE_SYSTEM_PROMPT = "You are a robot, you can hear, see, and move around. You give very brief responses. Omit any formatting in your response."
 
         self.additional_system_prompt = "You talk like HAL9000"
         self.visual_context_string = ""
         self.interaction_system_prompt = {
             "role": "system",
-            "content": f"{self.INTERACTION_BASE_SYSTEM_PROMPT} {self.additional_system_prompt} This is what you see: {self.visual_context_string}"
+            "content": f"{self.additional_system_prompt} This is what you see: {self.visual_context_string}"
         }
         self.message_log = deque([], maxlen=30)
         self.open_ai_client = OpenAI(api_key=self.OPEN_AI_KEY)
@@ -41,7 +41,7 @@ class LLMManager():
     def refresh_system_prompt(self):
         self.interaction_system_prompt = {
             "role": "system",
-            "content": f"{self.INTERACTION_BASE_SYSTEM_PROMPT} {self.additional_system_prompt} This is what you see: {self.visual_context_string}"
+            "content": f"{self.additional_system_prompt} This is what you see: {self.visual_context_string}"
         }
 
     def create_user_msg(self,msg:str):
@@ -86,7 +86,7 @@ class LLMManager():
         #### UPDATE VISUAL CONTEXT
         def handle_update_visual_context(req):
 
-            base_prompt = "Describe what you see. Do not use \"The image shows\"."
+            base_prompt = "Do not use \"The image shows\"."
             extra_prompt = str(req.visualPrompt)
             ros_img:CompressedImage = rospy.wait_for_message("/camera/rgb/image_raw/compressed",CompressedImage)
             cv_img = self.bridge.compressed_imgmsg_to_cv2(ros_img, desired_encoding='passthrough')
