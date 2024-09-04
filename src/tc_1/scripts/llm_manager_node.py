@@ -79,6 +79,18 @@ class LLMManager():
         rate = rospy.Rate(10)
         llm_sentence_pub = rospy.Publisher("llm_sentence",String, queue_size=5)
         stt_sentence_pub = rospy.Publisher('stt_sentence', String, queue_size=5)
+        img_description_pub = rospy.Publisher('img_description', String, queue_size=5)
+
+        #========================================================================================
+        #============= UTIL FUNCTIONS ===========================================================
+        #========================================================================================
+
+        def get_base64_image():
+            ros_img:CompressedImage = rospy.wait_for_message("/camera/rgb/image_raw/compressed",CompressedImage)
+            cv_img = self.bridge.compressed_imgmsg_to_cv2(ros_img, desired_encoding='passthrough')
+            _, buffer = cv2.imencode('.jpg', cv_img)
+            base64_img = base64.b64encode(buffer).decode('utf-8')
+            return base64_img
 
         #========================================================================================
         #=============  SERVICE HANDLERS ========================================================
@@ -95,16 +107,15 @@ class LLMManager():
 
             base_prompt = "Do not use \"The image shows\"."
             extra_prompt = str(req.visualPrompt)
-            ros_img:CompressedImage = rospy.wait_for_message("/camera/rgb/image_raw/compressed",CompressedImage)
-            cv_img = self.bridge.compressed_imgmsg_to_cv2(ros_img, desired_encoding='passthrough')
-            _, buffer = cv2.imencode('.jpg', cv_img)
-            base64_img = base64.b64encode(buffer).decode('utf-8')
+            
+            base64_img = get_base64_image()
 
             system_prompt = self.create_system_prompt(f"{base_prompt} {extra_prompt}")
             image_message = self.create_image_msg(base64_img)
 
             new_visual_context = self.get_gpt_response([system_prompt, image_message])
             self.visual_context_string = new_visual_context
+            img_description_pub.publish(new_visual_context)
 
             self.refresh_system_prompt()
 
