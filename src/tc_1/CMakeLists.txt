@@ -66,6 +66,7 @@ add_service_files(
   InjectUserInput.srv
   UpdateVisualContext.srv
   UpdateSystemPrompt.srv
+  ClearChatLog.srv
 )
 
 ## Generate actions in the 'action' folder

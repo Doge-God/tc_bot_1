@@ -16,7 +16,7 @@ def on_llm_response(data):
 
     rospy.loginfo(str(data.data))
 
-    subprocess.run(["espeak", str(data.data)])
+    subprocess.run(["espeak", str(data.data),])
 
     try:
         set_stt_active = rospy.ServiceProxy("stt_control", SttControl)

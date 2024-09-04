@@ -19,6 +19,7 @@ from tc_1.srv import InjectUserInput, InjectUserInputResponse
 from tc_1.srv import InjectLLMResponse, InjectLLMResponseResponse
 from tc_1.srv import UpdateVisualContext, UpdateVisualContextResponse
 from tc_1.srv import UpdateSystemPrompt, UpdateSystemPromptResponse
+from tc_1.srv import ClearChatLog, ClearChatLogResponse
 from collections import deque
 
 load_dotenv()
@@ -82,6 +83,12 @@ class LLMManager():
         #========================================================================================
         #=============  SERVICE HANDLERS ========================================================
         #========================================================================================
+
+        #### CLEAR CHAT LOG
+        def handle_clear_chat_log(_):
+            self.message_log = []
+            return ClearChatLogResponse("Success")
+        rospy.Service("clear_chat_log", ClearChatLog, handle_clear_chat_log)
 
         #### UPDATE VISUAL CONTEXT
         def handle_update_visual_context(req):
