@@ -10,6 +10,7 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 from cv_bridge import CvBridge
+import datetime
 import base64
 import cv2
 from sensor_msgs.msg import CompressedImage, Image
@@ -27,6 +28,9 @@ load_dotenv()
 class LLMManager():
     def __init__(self) -> None:
         self.OPEN_AI_KEY = os.getenv("OPEN_AI_KEY")
+        self.LOG_FILE_PATH = "/home/adam/Desktop/conversation_logs.txt"
+        self.add_log_entry(" ======== LLM MANAGER RESTARTED: NEW SESSION ========")
+
         # self.INTERACTION_BASE_SYSTEM_PROMPT = "You are a robot, you can hear, see, and move around. You give very brief responses. Omit any formatting in your response."
 
         self.additional_system_prompt = "You talk like HAL9000"
@@ -38,6 +42,18 @@ class LLMManager():
         self.message_log = deque([], maxlen=30)
         self.open_ai_client = OpenAI(api_key=self.OPEN_AI_KEY)
         self.bridge = CvBridge()
+
+    def add_log_entry(self,input_string:String):
+        # Get the current timestamp
+        timestamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
+        
+        # Format the string to include the timestamp
+        formatted_string = f"{timestamp} {str.strip(input_string)}\n"
+        
+        # Open the file in append mode and write the formatted string
+        with open(self.LOG_FILE_PATH, 'a+') as file:
+            file.write(formatted_string)
+
 
     def refresh_system_prompt(self):
         self.interaction_system_prompt = {
@@ -99,6 +115,7 @@ class LLMManager():
         #### CLEAR CHAT LOG
         def handle_clear_chat_log(_):
             self.message_log = []
+            self.add_log_entry("==== Warning: chat log cleared. ====")
             return ClearChatLogResponse("Success")
         rospy.Service("clear_chat_log", ClearChatLog, handle_clear_chat_log)
 
@@ -116,7 +133,7 @@ class LLMManager():
             new_visual_context = self.get_gpt_response([system_prompt, image_message])
             self.visual_context_string = new_visual_context
             img_description_pub.publish(new_visual_context)
-
+            self.add_log_entry(f" == Visual: {new_visual_context}")
             self.refresh_system_prompt()
 
             return UpdateVisualContextResponse(new_visual_context)
@@ -178,6 +195,11 @@ class LLMManager():
                 llm_sentence_pub.publish(response)
             except:
                 rospy.logerr("LLM manager: OpenAI API call failed. Consider manual override.")
+            
+            # Log entries
+            if self.LOG_FILE_PATH:
+                self.add_log_entry(f"User: {str(data.data)}")
+                self.add_log_entry(f"Response: {response}")
 
         rospy.Subscriber("stt_sentence", String, on_user_speech)
 
