@@ -8,7 +8,7 @@ def onboard_vis():
     rate = rospy.Rate(10)
 
     def on_llm_response(data):
-        rospy.loginfo(f"> RESPONSE: {str(data.data).strip()} \n\n ================================================================= \n\n")
+        rospy.loginfo(f"> RESPONSE: {str(data.data).strip()} \n")
 
     def on_user_speech(data):
         rospy.loginfo(f"> USER: {str(data.data).strip()} \n")
