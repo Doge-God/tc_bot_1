@@ -133,7 +133,7 @@ class LLMManager():
             new_visual_context = self.get_gpt_response([system_prompt, image_message])
             self.visual_context_string = new_visual_context
             img_description_pub.publish(new_visual_context)
-            self.add_log_entry(f" == Visual: {new_visual_context}")
+            self.add_log_entry(f" == Visual: {str.strip(new_visual_context)}")
             self.refresh_system_prompt()
 
             return UpdateVisualContextResponse(new_visual_context)
