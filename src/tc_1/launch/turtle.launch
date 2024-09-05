@@ -17,10 +17,14 @@
         output="screen"
     />
 
-    <node 
-        pkg="tc_1"
-        type="tts_node.py"
-        name="tts_node"
-        output="screen"
-    />
+    <group ns="onboard">
+        <node 
+            pkg="tc_1"
+            type="tts_node.py"
+            name="tts_node"
+            output="screen"
+        />
+    </group>
+
+    
 </launch>

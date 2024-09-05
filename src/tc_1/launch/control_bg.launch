@@ -19,6 +19,15 @@
         output="screen"
     />
 
+    <group ns="control">
+        <node 
+            pkg="tc_1"
+            type="tts_node.py"
+            name="tts_node"
+            output="screen"
+        />
+    </group>
+
     <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch" />
 
 </launch>
