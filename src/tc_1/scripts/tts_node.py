@@ -3,6 +3,7 @@
 import rospy
 from std_msgs.msg import String 
 from tc_1.srv import SttControl
+from tc_1.srv import StopTts, StopTtsResponse
 from tc_1.msg import TTSParams
 import subprocess
 from dynamic_reconfigure.parameter_generator_catkin import *
@@ -16,7 +17,8 @@ class TTS():
         self.voice = "en+f4" # -v 
         self.should_manage_stt = False
 
-    
+        self.tts_process = None
+
 
     def run(self):
         # Reinitialize the node with the retrieved namespace
@@ -30,6 +32,7 @@ class TTS():
         # self.capital_behaviour = rospy.get_param('~capital_behaviour', default="1")
         # self.voice = rospy.get_param('~voice', default="en+m1")
 
+        #### HANDLE PARAM CHANGE
         def on_change_params(data):
             self.volume = str(data.volume)
             self.pitch = str(data.pitch)
@@ -39,26 +42,6 @@ class TTS():
         rospy.Subscriber("tts_params", TTSParams, on_change_params)
 
 
-        # def on_change_volume(data):
-        #     self.volume = str(data.data)
-        # rospy.Subscriber("volume", String, on_change_volume)
-
-        # def on_change_pitch(data):
-        #     self.pitch = str(data.data)
-        # rospy.Subscriber("pitch", String, on_change_pitch)
-
-        # def on_change_speed(data):
-        #     self.speed = str(data.data)
-        # rospy.Subscriber("speed", String, on_change_speed)
-
-        # def on_change_voice(data):
-        #     self.voice = str(data.data)
-        # rospy.Subscriber("voice", String, on_change_voice)
-
-        # def on_change_capital_behaviour(data):
-        #     self.capital_behaviour=str(data.data)
-        # rospy.Subscriber("capital_behaviour", String, on_change_capital_behaviour)
-
         def stt_control(is_on:bool):
             try:
                 set_stt_active = rospy.ServiceProxy("/stt_control", SttControl)
@@ -67,22 +50,34 @@ class TTS():
                 rospy.logwarn("TTS: failed to deactivate STT.")
                 pass
 
+        #### HANDLE MANUAL TTS STOP
+        def handle_stop_tts(_):
+            # make sure there is a processed that is running
+            if self.tts_process != None and self.tts_process.returncode != None:
+                self.tts_process.terminate()
+                self.tts_process.wait()
+                stt_control(is_on=True)
+            return StopTtsResponse("Success")
+        rospy.Service("stop_tts", StopTts, handle_stop_tts)
+
 
         def on_llm_response(data):
-            
+
             if self.should_manage_stt:
                 stt_control(is_on=False)
 
             rospy.loginfo(str(data.data))
-            
 
-            subprocess.run(["espeak", 
-                    "-a", str(self.volume), 
-                    "-p", str(self.pitch), 
-                    "-s", str(self.speed), 
-                    "-k", str(self.capital_behaviour), 
-                    "-v", str(self.voice), 
-                    str(data.data)])
+            # make sure there is no process OR one is already done
+            if self.tts_process == None or self.tts_process.returncode != None:
+                self.tts_process = subprocess.Popen(["espeak", 
+                        "-a", str(self.volume), 
+                        "-p", str(self.pitch), 
+                        "-s", str(self.speed), 
+                        "-k", str(self.capital_behaviour), 
+                        "-v", str(self.voice), 
+                        str(data.data)])
+                self.tts_process.wait()
 
             if self.should_manage_stt:
                 stt_control(is_on=True)

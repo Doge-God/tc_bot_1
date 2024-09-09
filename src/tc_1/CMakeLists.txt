@@ -66,6 +66,7 @@ add_service_files(
   UpdateVisualContext.srv
   UpdateSystemPrompt.srv
   ClearChatLog.srv
+  StopTts.srv
 )
 
 ## Generate actions in the 'action' folder
