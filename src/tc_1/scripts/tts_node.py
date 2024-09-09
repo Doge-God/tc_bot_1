@@ -53,7 +53,7 @@ class TTS():
         #### HANDLE MANUAL TTS STOP
         def handle_stop_tts(_):
             # make sure there is a processed that is running
-            if self.tts_process != None and self.tts_process.returncode != None:
+            if self.tts_process != None and self.tts_process.returncode == None:
                 self.tts_process.terminate()
                 self.tts_process.wait()
                 stt_control(is_on=True)
@@ -63,13 +63,14 @@ class TTS():
 
         def on_llm_response(data):
 
-            if self.should_manage_stt:
-                stt_control(is_on=False)
 
             rospy.loginfo(str(data.data))
 
             # make sure there is no process OR one is already done
             if self.tts_process == None or self.tts_process.returncode != None:
+                if self.should_manage_stt:
+                    stt_control(is_on=False)
+
                 self.tts_process = subprocess.Popen(["espeak", 
                         "-a", str(self.volume), 
                         "-p", str(self.pitch), 
@@ -77,10 +78,11 @@ class TTS():
                         "-k", str(self.capital_behaviour), 
                         "-v", str(self.voice), 
                         str(data.data)])
+
                 self.tts_process.wait()
 
-            if self.should_manage_stt:
-                stt_control(is_on=True)
+                if self.should_manage_stt:
+                    stt_control(is_on=True)
 
         rospy.Subscriber("/llm_sentence", String, on_llm_response)
 

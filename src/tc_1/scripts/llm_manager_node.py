@@ -127,10 +127,10 @@ class LLMManager():
             
             base64_img = get_base64_image()
 
-            system_prompt = self.create_system_prompt(f"{base_prompt} {extra_prompt}")
+            user_message = self.create_user_msg(f"{base_prompt} {extra_prompt}")
             image_message = self.create_image_msg(base64_img)
 
-            new_visual_context = self.get_gpt_response([system_prompt, image_message])
+            new_visual_context = self.get_gpt_response([user_message, image_message])
             self.visual_context_string = new_visual_context
             img_description_pub.publish(new_visual_context)
             self.add_log_entry(f" == Visual: {str.strip(new_visual_context)}")
