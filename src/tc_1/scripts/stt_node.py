@@ -8,7 +8,6 @@ import rospy
 from std_msgs.msg import String
 import os
 from dotenv import load_dotenv
-import threading
 import pyaudio
 
 from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, AsyncLiveClient
@@ -33,6 +32,7 @@ class AudioHandler():
         self.CHANNELS=channels
         self.RATE=rate
         self.CHUNK = chunk
+        self.stream = None
 
     def mic_callback(self,input_data, frame_count, time_info, status_flag):
         self.audio_queue.append(input_data)
@@ -99,32 +99,40 @@ class STTDeepgram():
             # Time in milliseconds of silence to wait for before finalizing speech
             endpointing=30
         )
+    
+    def get_on_message(self):
+        def on_message(sdk_self, result, **kwargs):
+            if result.speech_final:
+                sentence = result.channel.alternatives[0].transcript
 
-    # DG client event callbacks
-    def on_message(self, result, **kwargs):
-        if result.speech_final:
-            sentence = result.channel.alternatives[0].transcript
+                if len(sentence) == 0:
+                    return
+                self.current_sentence += f" {sentence}"
+        return on_message
 
-            if len(sentence) == 0:
-                return
-            self.current_sentence += f" {sentence}"
-
-    def on_utterance_end(self, utterance_end,**kwargs):
-        self.stt_sentence_pub.publish(self.current_sentence)
-        rospy.loginfo(f"Utterance end: {self.current_sentence}")
-        self.current_sentence = ""
-
-    def on_metadata(self, metadata, **kwargs):
-        print(f"\n\n{metadata}\n\n")
-
-    def on_error(self, error, **kwargs):
-        rospy.logerr(f"\n\n{error}\n\n")
-        # set flags for exiting audio sending loop 
-        self.should_restart_stt = True
-        self.is_exiting = True
-        # stop audio stream
-        self.audio_handler.stop_audio_stream()
-        self.audio_handler = None
+    def get_on_utterance_end(self):
+        def on_utterance_end(sdk_self, utterance_end,**kwargs):
+            self.stt_sentence_pub.publish(self.current_sentence)
+            rospy.loginfo(f"Utterance end: {self.current_sentence}")
+            self.current_sentence = ""
+        return on_utterance_end
+        
+    def get_on_metadata(self):
+        def on_metadata(sdk_self, metadata, **kwargs):
+            print(f"\n\n{metadata}\n\n")
+        return on_metadata
+    
+    def get_on_error(self): 
+        def on_error(sdk_self, error, **kwargs):
+            rospy.logerr(f"\n\n{error}\n\n")
+            # set flags for exiting audio sending loop 
+            self.should_restart_stt = True
+            self.is_exiting = True
+            # stop audio stream
+            self.audio_handler.stop_audio_stream()
+            self.audio_handler = None  
+        return on_error
+    
 
     def run(self):
         #################################################
@@ -149,6 +157,14 @@ class STTDeepgram():
             return SttManualControlResponse(not self.is_manual_stopped)
         rospy.Service('stt_manual_control', SttManualControl,handle_toggle_manual_control)
 
+         ##########################################
+        ## Node Shutdown Behaviour ###############
+        ##########################################
+        def on_node_shutdown():
+            self.is_exiting = True
+        rospy.on_shutdown(on_node_shutdown)
+             
+
         #################################################
         ## STT setup ####################################
         #################################################
@@ -161,16 +177,20 @@ class STTDeepgram():
             try:
                 # Create a Deepgram client and connection
                 deepgram = DeepgramClient(API_KEY)
-                self.dg_connection = deepgram.listen.websocket.v("1")            
+                dg_connection = deepgram.listen.websocket.v("1")     
+
+                # DG client event callbacks
+
+                
 
                 # Register callbacks
-                self.dg_connection.on(LiveTranscriptionEvents.Transcript, self.on_message)
-                self.dg_connection.on(LiveTranscriptionEvents.Metadata, self.on_metadata)
-                self.dg_connection.on(LiveTranscriptionEvents.Error, self.on_error)
-                self.dg_connection.on(LiveTranscriptionEvents.UtteranceEnd, self.on_utterance_end)
+                dg_connection.on(LiveTranscriptionEvents.Transcript, self.get_on_message())
+                dg_connection.on(LiveTranscriptionEvents.Metadata, self.get_on_metadata())
+                dg_connection.on(LiveTranscriptionEvents.Error, self.get_on_error())
+                dg_connection.on(LiveTranscriptionEvents.UtteranceEnd, self.get_on_utterance_end())
                 
                 # Start the connection
-                self.dg_connection.start(self.dg_options)
+                dg_connection.start(self.dg_options)
                 
                 # initialize audio handler
                 self.audio_handler = AudioHandler()
@@ -189,13 +209,13 @@ class STTDeepgram():
                     # If paused or manually stopped, dont send anything and continue
                     if self.is_manual_stopped or self.is_pausing:
                         self.audio_handler.clear_audio_queue()
-                        self.dg_connection.keep_alive()
+                        dg_connection.keep_alive()
                         continue
                     # send data over stream
-                    self.dg_connection.send(data)
+                    dg_connection.send(data)
 
                 # close connection
-                self.dg_connection.finish()
+                dg_connection.finish()
 
             except Exception as e:
                 rospy.logerr(f"STT Node Error: {str(e)}")
@@ -206,15 +226,7 @@ class STTDeepgram():
 
             rate.sleep()
         
-        ##########################################
-        ## Node Shutdown Behaviour ###############
-        ##########################################
-        def on_node_shutdown():
-            if self.dg_connection:
-                self.dg_connection.finish()
-            if self.audio_handler:
-                self.audio_handler.stop_audio_stream()
-        rospy.on_shutdown(on_node_shutdown)
+       
 
 # Execute if main
 if __name__ == '__main__':
