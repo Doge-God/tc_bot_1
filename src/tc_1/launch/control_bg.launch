@@ -12,6 +12,11 @@
         </include>
     </group>
 
+    <include
+            file="$(find turtlebot_teleop)/launch/xbox360_teleop.launch">  
+            <param name="scale_linear" value="0.3"/>
+    </include>
+
     <node 
         pkg="tc_1"
         type="llm_manager_node.py"

@@ -61,6 +61,7 @@ add_message_files(
 add_service_files(
   FILES
   SttControl.srv
+  SttManualControl.srv
   InjectLLMResponse.srv
   InjectUserInput.srv
   UpdateVisualContext.srv
