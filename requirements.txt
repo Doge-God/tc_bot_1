@@ -6,4 +6,7 @@ pyyaml
 rospkg
 catkin_pkg
 
+numpy
+pyaudio                      
+
 #numpy==2.1.0
