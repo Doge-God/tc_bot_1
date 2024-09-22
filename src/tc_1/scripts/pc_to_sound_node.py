@@ -1,3 +1,6 @@
+#! /usr/local/bin/python3.10
+
+
 import rospy
 import pyaudio
 from sensor_msgs.msg import PointCloud2
