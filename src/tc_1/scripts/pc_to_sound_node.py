@@ -1,3 +1,6 @@
+#! /usr/local/bin/python3.10
+
+
 import rospy
 import pyaudio
 from sensor_msgs.msg import PointCloud2
@@ -15,7 +18,8 @@ class PointCloudToAudio():
 
         if step > 1:
             # Average every 'step' bytes to create the compressed data
-            compressed_data = np.mean(np.reshape(raw_data[:step * target_size], (-1, step)), axis=1).astype(np.uint8)
+            compressed_data = np.mean(np.reshape(raw_data[:step * target_size], (-1, step)), axis=1)/5
+            compressed_data = compressed_data.astype(np.uint8)
         else:
             # If no compression needed, just truncate or pad to target_size
             compressed_data = raw_data[:target_size]
@@ -34,7 +38,7 @@ class PointCloudToAudio():
     
             # Calculate the required audio buffer size
             sample_rate = 44100
-            target_duration = 1.0 / 30  # 30 Hz scan rate = 33.33 ms per scan
+            target_duration = 1.0 / 27  # 30 Hz scan rate = 33.33 ms per scan
             target_samples = int(sample_rate * target_duration)  # Number of audio samples we need for each scan
             
             # Each audio sample is 2 bytes (16-bit audio), so we need half the samples in bytes
