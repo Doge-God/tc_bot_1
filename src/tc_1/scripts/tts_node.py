@@ -8,6 +8,7 @@ from tc_1.msg import TTSParams
 import subprocess
 from dynamic_reconfigure.parameter_generator_catkin import *
 import os
+from piper import PiperVoice
 
 class TTS():
     def __init__(self) -> None:
@@ -19,6 +20,9 @@ class TTS():
         self.should_manage_stt = False
 
         self.tts_process = None
+
+        model_path = os.path.expanduser("~/piper/models/en_US-amy-low.onnx")
+        self.piper_voice = PiperVoice.load(model_path)
 
 
     def run(self):
@@ -95,25 +99,31 @@ class TTS():
                 if self.should_manage_stt:
                     stt_control(is_on=False)
 
-                piper_path = os.path.expanduser("~/piper/piper")
-                model_path = os.path.expanduser("~/piper/models/en_US-amy-low.onnx")
+                # piper_path = os.path.expanduser("~/piper/piper")
+                # model_path = os.path.expanduser("~/piper/models/en_US-amy-low.onnx")
 
-                print(model_path)
+                # echo_proc = subprocess.Popen(["echo", str(data.data)], stdout=subprocess.PIPE)
+                # model_proc = subprocess.Popen([piper_path, "--model", model_path,
+                #         "--output-raw"], stdin=echo_proc.stdout, stdout=subprocess.PIPE)
 
-                echo_proc = subprocess.Popen(["echo", str(data.data)], stdout=subprocess.PIPE)
-                model_proc = subprocess.Popen([piper_path, "--model", model_path,
-                        "--output-raw"], stdin=echo_proc.stdout, stdout=subprocess.PIPE)
+                # echo_proc.stdout.close()
 
-                echo_proc.stdout.close()
+                
 
                 self.tts_process = subprocess.Popen([
                         "aplay", "-r", "16000", "-f", "S16_LE", "-t", "raw" 
-                    ], stdin=model_proc.stdout)
+                    ], stdin=subprocess.PIPE)
+                
+                synthesized_buffer = self.piper_voice.synthesize_stream_raw(str(data.data))
+                
+                try: 
+                    for data in synthesized_buffer:
+                        self.tts_process.stdin.write(data)
+                    self.tts_process.stdin.close()
+                
+                except:
+                    print("Error sending bytes to tts process.")
 
-                model_proc.stdout.close()
-
-                echo_proc.wait()
-                model_proc.wait()
                 self.tts_process.wait()
 
                 if self.should_manage_stt:

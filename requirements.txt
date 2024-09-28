@@ -9,4 +9,5 @@ catkin_pkg
 numpy
 pyaudio                      
 
+piper-tts
 #numpy==2.1.0
