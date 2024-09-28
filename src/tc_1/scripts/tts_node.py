@@ -7,6 +7,7 @@ from tc_1.srv import StopTts, StopTtsResponse
 from tc_1.msg import TTSParams
 import subprocess
 from dynamic_reconfigure.parameter_generator_catkin import *
+import os
 
 class TTS():
     def __init__(self) -> None:
@@ -61,7 +62,7 @@ class TTS():
         rospy.Service("stop_tts", StopTts, handle_stop_tts)
 
 
-        def on_llm_response(data):
+        def on_llm_response_espeak(data):
 
 
             rospy.loginfo(str(data.data))
@@ -84,7 +85,41 @@ class TTS():
                 if self.should_manage_stt:
                     stt_control(is_on=True)
 
-        rospy.Subscriber("/llm_sentence", String, on_llm_response)
+        def on_llm_response_piper(data):
+
+
+            rospy.loginfo(str(data.data))
+
+            # make sure there is no process OR one is already done
+            if self.tts_process == None or self.tts_process.returncode != None:
+                if self.should_manage_stt:
+                    stt_control(is_on=False)
+
+                piper_path = os.path.expanduser("~/piper/piper")
+                model_path = os.path.expanduser("~/piper/models/en_US-amy-low.onnx")
+
+                print(model_path)
+
+                echo_proc = subprocess.Popen(["echo", str(data.data)], stdout=subprocess.PIPE)
+                model_proc = subprocess.Popen([piper_path, "--model", model_path,
+                        "--output-raw"], stdin=echo_proc.stdout, stdout=subprocess.PIPE)
+
+                echo_proc.stdout.close()
+
+                self.tts_process = subprocess.Popen([
+                        "aplay", "-r", "16000", "-f", "S16_LE", "-t", "raw" 
+                    ], stdin=model_proc.stdout)
+
+                model_proc.stdout.close()
+
+                echo_proc.wait()
+                model_proc.wait()
+                self.tts_process.wait()
+
+                if self.should_manage_stt:
+                    stt_control(is_on=True)
+
+        rospy.Subscriber("/llm_sentence", String, on_llm_response_piper)
 
 
         while not rospy.is_shutdown():
