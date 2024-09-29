@@ -4,7 +4,7 @@
         <node 
             pkg="tc_1"
             type="vis_node.py"
-            name="tts_node"
+            name="vis"
             output="screen"
         >
             <param name="user_tag" value="USER"/>
