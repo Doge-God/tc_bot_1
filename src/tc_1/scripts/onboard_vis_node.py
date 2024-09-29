@@ -2,16 +2,20 @@
 
 import rospy
 from std_msgs.msg import String
+import sys
 
 def onboard_vis():
     rospy.init_node("onboard_vis")
     rate = rospy.Rate(10)
 
+    response_tag = rospy.get_param('~response_tag', "RESPONSE")
+    user_tag = rospy.get_param('~user_tag', "USER")
+
     def on_llm_response(data):
-        print(f"> RESPONSE: {str(data.data).strip()} \n")
+        print(f"> {response_tag}: {str(data.data).strip()} \n")
 
     def on_user_speech(data):
-        print(f"> USER: {str(data.data).strip()} \n")
+        print(f"> {user_tag}: {str(data.data).strip()} \n")
 
     def on_img_description(data):
         print(f"\n >> NEW VISUAL CONTEXT: {str(data.data).strip()} \n")
@@ -22,6 +26,7 @@ def onboard_vis():
 
     while not rospy.is_shutdown():
         rate.sleep()
+
 
 if __name__ == '__main__':
     try:
