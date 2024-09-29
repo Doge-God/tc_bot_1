@@ -68,7 +68,6 @@ class TTS():
 
         def on_llm_response_espeak(data):
 
-
             rospy.loginfo(str(data.data))
 
             # make sure there is no process OR one is already done

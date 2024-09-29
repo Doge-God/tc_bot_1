@@ -1,0 +1,16 @@
+ <launch>
+
+ <group ns="control">
+        <node 
+            pkg="tc_1"
+            type="vis_node.py"
+            name="tts_node"
+            output="screen"
+        >
+            <param name="user_tag" value="USER"/>
+            <param name="response_tag" value="RESPONSE"/>
+
+        </node>
+    </group>
+
+</launch>

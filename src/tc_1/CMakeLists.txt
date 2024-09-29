@@ -68,6 +68,7 @@ add_service_files(
   UpdateSystemPrompt.srv
   ClearChatLog.srv
   StopTts.srv
+  ToggleShowVisCtx.srv
 )
 
 ## Generate actions in the 'action' folder
