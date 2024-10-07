@@ -23,6 +23,7 @@
             <param name="should_manage_stt" value="false"/>
 
         </node>
+
     </group>
 
     <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch" />

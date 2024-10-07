@@ -29,7 +29,7 @@
         output="screen"
     />
 
-    <group ns="onboard">
+    <!-- <group ns="onboard">
         <node 
             pkg="tc_1"
             type="tts_node.py"
@@ -39,7 +39,7 @@
             <param name="should_manage_stt" value="true"/>
 
         </node>
-    </group>
+    </group> -->
 
     
 </launch>
