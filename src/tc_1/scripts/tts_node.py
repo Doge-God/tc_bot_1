@@ -85,7 +85,6 @@ class TTS():
         self.piper_voice_key = rospy.get_param("~piper_voice", 0)  # Choices of Piper voices
         
         ###### STT Control 
-        self.should_manage_stt = False
         self.tts_process = None
 
         # Dynamic reconfigure server to handle live updates of parameters
@@ -126,7 +125,7 @@ class TTS():
             if self.tts_process == None or self.tts_process.returncode != None:
                 if self.should_manage_stt:
                     stt_control(is_on=False)
-
+                print("espeak process created")
                 self.tts_process = subprocess.Popen(["espeak", 
                         "-a", str(self.volume), 
                         "-p", str(self.pitch), 
@@ -136,6 +135,7 @@ class TTS():
                         content])
 
                 self.tts_process.wait()
+                print(f"espeak process done: {self.tts_process.returncode}")
 
                 if self.should_manage_stt:
                     stt_control(is_on=True)
@@ -156,12 +156,17 @@ class TTS():
                 try: 
                     for data in synthesized_buffer:
                         self.tts_process.stdin.write(data)
+
+                    self.tts_process.stdin.flush() 
                     self.tts_process.stdin.close()
+                    self.tts_process.wait()
+
+                    print(f"piper process done: {self.tts_process.returncode}")
                 
                 except:
                     print("Error sending bytes to tts process.")
 
-                self.tts_process.wait()
+                # self.tts_process.wait()
 
                 if self.should_manage_stt:
                     stt_control(is_on=True)
@@ -171,7 +176,9 @@ class TTS():
             if self.tts_method == 0:
                 run_tts_piper(str(data.data))
             elif self.tts_method == 1:
+                print("got tts request")
                 run_tts_espeak(str(data.data))
+                print("out of tts func")
             else:
                 raise NotImplementedError("Unknown TTS Method.")
 

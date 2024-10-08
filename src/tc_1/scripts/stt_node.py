@@ -16,6 +16,8 @@ from tc_1.srv import SttControl, SttControlResponse, SttManualControl, SttManual
 
 import rospy
 from std_msgs.msg import String
+import time
+
 load_dotenv()
 
 API_KEY = os.getenv("DEEPGRAM_KEY")
@@ -181,8 +183,6 @@ class STTDeepgram():
 
                 # DG client event callbacks
 
-                
-
                 # Register callbacks
                 dg_connection.on(LiveTranscriptionEvents.Transcript, self.get_on_message())
                 dg_connection.on(LiveTranscriptionEvents.Metadata, self.get_on_metadata())
@@ -207,10 +207,14 @@ class STTDeepgram():
                     if self.is_exiting:
                         break
                     # If paused or manually stopped, dont send anything and continue
-                    if self.is_manual_stopped or self.is_pausing:
+
+                    if self.is_manual_stopped or self.is_exiting:
+                        while self.is_manual_stopped or self.is_pausing:
+                            self.audio_handler.clear_audio_queue()
+                            dg_connection.keep_alive()
+                        time.sleep(1)
                         self.audio_handler.clear_audio_queue()
-                        dg_connection.keep_alive()
-                        continue
+                        
                     # send data over stream
                     dg_connection.send(data)
 

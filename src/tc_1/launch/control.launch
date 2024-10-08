@@ -20,7 +20,7 @@
             name="tts_node"
             output="screen"
         >
-            <param name="should_manage_stt" value="false"/>
+            <param name="should_manage_stt" value="true"/>
 
         </node>
 
