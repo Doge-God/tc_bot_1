@@ -56,6 +56,12 @@ class AudioHandler():
         )
         self.stream.start_stream()
 
+    def pause_stream(self):
+        self.stream.stop_stream()
+    
+    def unpause_stream(self):
+        self.stream.start_stream()
+
     def stop_audio_stream(self):
         if self.stream:
             self.stream.stop_stream()
@@ -208,12 +214,17 @@ class STTDeepgram():
                         break
                     # If paused or manually stopped, dont send anything and continue
 
-                    if self.is_manual_stopped or self.is_exiting:
-                        while self.is_manual_stopped or self.is_pausing:
-                            self.audio_handler.clear_audio_queue()
-                            dg_connection.keep_alive()
-                        time.sleep(1)
+                    if self.is_manual_stopped or self.is_pausing:
+                        self.audio_handler.pause_stream()
                         self.audio_handler.clear_audio_queue()
+                        while self.is_manual_stopped or self.is_pausing:
+                            # self.audio_handler.clear_audio_queue()
+                            # self.audio_handler.stream.stop_stream
+                            dg_connection.keep_alive()
+
+                        self.audio_handler.unpause_stream()
+                        
+                        
                         
                     # send data over stream
                     dg_connection.send(data)
