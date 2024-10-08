@@ -218,8 +218,6 @@ class STTDeepgram():
                         self.audio_handler.pause_stream()
                         self.audio_handler.clear_audio_queue()
                         while self.is_manual_stopped or self.is_pausing:
-                            # self.audio_handler.clear_audio_queue()
-                            # self.audio_handler.stream.stop_stream
                             dg_connection.keep_alive()
 
                         self.audio_handler.unpause_stream()

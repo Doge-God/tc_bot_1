@@ -43,7 +43,7 @@ class TTS():
 
         self.piper_voices = [os.path.expanduser("~/piper/models/en_US-amy-low.onnx"), 
                              os.path.expanduser("~/piper/models/en_US-danny-low.onnx")]
-        
+         
 
     def dynamic_reconfig_callback(self, config, level):
         """
@@ -121,11 +121,12 @@ class TTS():
 
         def run_tts_espeak(content:str):
             # make sure there is no process OR one is already done
-            rospy.loginfo(f"ESPEAK: {content}")
+            
             if self.tts_process == None or self.tts_process.returncode != None:
                 if self.should_manage_stt:
                     stt_control(is_on=False)
-                print("espeak process created")
+                    
+                rospy.loginfo(f"ESPEAK: {content}")
                 self.tts_process = subprocess.Popen(["espeak", 
                         "-a", str(self.volume), 
                         "-p", str(self.pitch), 
@@ -141,12 +142,13 @@ class TTS():
                     stt_control(is_on=True)
 
         def run_tts_piper(content:str):
-            rospy.loginfo(f"PIPER: {content}")
+            
             # make sure there is no process OR one is already done
             if self.tts_process == None or self.tts_process.returncode != None:
                 if self.should_manage_stt:
                     stt_control(is_on=False)
 
+                rospy.loginfo(f"PIPER: {content}")
                 self.tts_process = subprocess.Popen([
                         "aplay", "-r", "16000", "-f", "S16_LE", "-t", "raw" 
                     ], stdin=subprocess.PIPE)
