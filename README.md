@@ -6,7 +6,7 @@ This is a robotic implementation for Touch Compass's dance show _Tentacular_. It
 
 # Quick Start
 * For _**robot operators**_: navigate to [Usage](https://github.com/Doge-God/tc_bot_1/wiki/Usage)
-* For _**developer or technical staff**_ intending to maintain, extend or replicate this implementation: see [Replicate Environment](https://github.com/Doge-God/tc_bot_1/wiki/Replicate-Environment) to re-create development environment. See [Technical Overview](https://github.com/Doge-God/tc_bot_1/wiki/Technical-Overview) for brief codebase breakdown.
+* For _**developer or technical staff**_ intending to maintain, extend or replicate this implementation: see [Replicate Environment](https://github.com/Doge-God/tc_bot_1/wiki/Replicate-Environment) to re-create the development environment. See [Technical Overview](https://github.com/Doge-God/tc_bot_1/wiki/Technical-Overview) for a brief codebase breakdown.
   
 ## Glossary
 These will be used consistently across this Wiki.
