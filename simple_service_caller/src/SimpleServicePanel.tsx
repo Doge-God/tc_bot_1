@@ -23,7 +23,7 @@ type SettingState = {
 
 function SimpleServiceCallPanel({ context }: { context: PanelExtensionContext }): JSX.Element {
   const [renderDone, setRenderDone] = useState<(() => void) | undefined>();
-  const [state, setState] = useState<State>({request: "{}" });
+  const [state, setState] = useState<State>({request: "Enter Text Here." });
   
   // Build our panel state from the context's initialState, filling in any possibly missing values.
   const [settingState, setSettingState] = useState<SettingState>(() => {
