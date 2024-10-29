@@ -10,4 +10,5 @@ numpy
 pyaudio                      
 
 piper-tts
+simpleaudio
 #numpy==2.1.0

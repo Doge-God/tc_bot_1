@@ -3,7 +3,6 @@
 # 
 
 # /usr/bin/python3
-
 import rospy
 from std_msgs.msg import String
 import os
@@ -14,7 +13,8 @@ import datetime
 import base64
 import cv2
 from sensor_msgs.msg import CompressedImage, Image
-
+import numpy as np
+import simpleaudio as sa
 from tc_1.srv import SttControl
 from tc_1.srv import InjectUserInput, InjectUserInputResponse
 from tc_1.srv import InjectLLMResponse, InjectLLMResponseResponse
@@ -42,6 +42,16 @@ class LLMManager():
         self.message_log = deque([], maxlen=30)
         self.open_ai_client = OpenAI(api_key=self.OPEN_AI_KEY)
         self.bridge = CvBridge()
+
+    def beep(self, freq = 440, duration=0.1):
+        sample_rate = 44100
+        t = np.linspace(0, duration, int(sample_rate * duration), False)
+        wave = 0.5 * np.sin(2 * np.pi * freq * t)  # Generate sine wave
+
+        audio = (wave * 32767).astype(np.int16)  # Convert to 16-bit PCM
+        play_obj = sa.play_buffer(audio, 1, 2, sample_rate)  # Play the beep
+        play_obj.wait_done()  # Wait for the sound to finish
+
 
     def add_log_entry(self,input_string:String):
         # Get the current timestamp
@@ -171,6 +181,9 @@ class LLMManager():
 
 
         def on_user_speech(data):
+            self.beep(440, 0.05)
+            self.beep(340, 0.05)
+            self.beep(440, 0.05)
             try:
                 set_stt_active = rospy.ServiceProxy("stt_control", SttControl)
                 set_stt_active(False)
