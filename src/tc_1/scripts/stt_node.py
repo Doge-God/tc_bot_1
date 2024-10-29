@@ -170,6 +170,7 @@ class STTDeepgram():
         ##########################################
         def on_node_shutdown():
             self.is_exiting = True
+
         rospy.on_shutdown(on_node_shutdown)
              
 
@@ -179,9 +180,10 @@ class STTDeepgram():
         while not rospy.is_shutdown():
             # try to re-establish stt service
             rospy.loginfo("## STARTING NEW DG CLIENT")
-            self.is_exiting = False
             
-
+            if self.is_exiting:
+                break
+            
             try:
                 # Create a Deepgram client and connection
                 deepgram = DeepgramClient(API_KEY)
