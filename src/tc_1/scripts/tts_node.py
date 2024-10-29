@@ -42,7 +42,7 @@ class TTS():
 
         self.tts_methods = ["piper", "espeak"]
 
-        self.piper_voices = [os.path.expanduser("~/piper/models/en_US-amy-low.onnx"), 
+        self.piper_voices = [os.path.expanduser("~/piper/models/en_US-amy-medium.onnx"), 
                              os.path.expanduser("~/piper/models/en_US-danny-low.onnx"),
                              os.path.expanduser("~/piper/models/en_GB-cori-high.onnx"),
                              os.path.expanduser("~/piper/models/en_GB-alan-medium.onnx"),
@@ -50,6 +50,7 @@ class TTS():
                              os.path.expanduser("~/piper/models/en_GB-jenny_dioco-medium.onnx"),
                              os.path.expanduser("~/piper/models/it_IT-paola-medium.onnx"),
                              os.path.expanduser("~/piper/models/de_DE-thorsten-high.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-ryan-high.onnx"),
                              ]
          
 
