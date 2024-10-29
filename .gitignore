@@ -187,3 +187,5 @@ devel
 *.lai
 *.la
 *.a
+
+node_modules

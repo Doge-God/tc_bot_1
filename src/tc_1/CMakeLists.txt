@@ -70,6 +70,7 @@ add_service_files(
   ClearChatLog.srv
   StopTts.srv
   ToggleShowVisCtx.srv
+  TtsControl.srv
 )
 
 ## Generate actions in the 'action' folder

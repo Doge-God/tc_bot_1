@@ -2,8 +2,8 @@
 
 import rospy
 from std_msgs.msg import String 
-from tc_1.srv import SttControl
-from tc_1.srv import StopTts, StopTtsResponse
+from tc_1.srv import SttControl, TtsControl
+from tc_1.srv import StopTts, StopTtsResponse, TtsControlResponse
 from tc_1.msg import TTSParams
 import subprocess
 from dynamic_reconfigure.parameter_generator_catkin import *
@@ -16,7 +16,8 @@ from tc_1.cfg import TTSConfig
 class TTS():
     def __init__(self) -> None:
 
-        # Retrieve configurable parameters from the parameter server
+        ###### Flags
+        self.is_active = True
 
         ###### General Parameters
         self.tts_method = 0  # TTS method (string)
@@ -42,14 +43,20 @@ class TTS():
         self.tts_methods = ["piper", "espeak"]
 
         self.piper_voices = [os.path.expanduser("~/piper/models/en_US-amy-low.onnx"), 
-                             os.path.expanduser("~/piper/models/en_US-danny-low.onnx")]
+                             os.path.expanduser("~/piper/models/en_US-danny-low.onnx"),
+                             os.path.expanduser("~/piper/models/en_GB-cori-high.onnx"),
+                             os.path.expanduser("~/piper/models/en_GB-alan-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_GB-alba-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_GB-jenny_dioco-medium.onnx"),
+                             os.path.expanduser("~/piper/models/it_IT-paola-medium.onnx"),
+                             os.path.expanduser("~/piper/models/de_DE-thorsten-high.onnx"),
+                             ]
          
 
     def dynamic_reconfig_callback(self, config, level):
         """
         This callback will be called whenever parameters are updated via dynamic reconfigure.
         """
-        
         
         self.volume = config["volume"]
         self.pitch = config["pitch"]
@@ -58,6 +65,7 @@ class TTS():
         self.voice = config["voice"]
         self.tts_method = config["tts_method"]
         self.piper_voice = PiperVoice.load(self.piper_voices[config["piper_voice"]])
+        self.piper_bitrate = config["piper_bitrate"]
 
         rospy.loginfo("Reconfigured TTS.")
 
@@ -83,7 +91,8 @@ class TTS():
 
         ###### Piper Parameters
         self.piper_voice_key = rospy.get_param("~piper_voice", 0)  # Choices of Piper voices
-        
+        self.piper_bitrate = rospy.get_param("~piper_bitrate", 22050)
+
         ###### STT Control 
         self.tts_process = None
 
@@ -119,6 +128,23 @@ class TTS():
             return StopTtsResponse("Success")
         rospy.Service("stop_tts", StopTts, handle_stop_tts)
 
+        #### HANDLE TTS CONTROL:
+        def handle_tts_control(req):
+            self.is_active = req.isTtsActive
+            rospy.loginfo(f"TTS control recieved, is_active = {self.is_active}")
+            
+            # Stop current speaking process, signal stt control for finishing speaking
+            if self.is_active == False:
+                if self.tts_process != None and self.tts_process.returncode == None:
+                    self.tts_process.terminate()
+                    self.tts_process.wait()
+            
+            
+            stt_control(is_on=True)
+
+            return TtsControlResponse(self.is_active)
+        rospy.Service('tts_control', TtsControl, handle_tts_control)
+
         def run_tts_espeak(content:str):
             # make sure there is no process OR one is already done
             
@@ -150,7 +176,7 @@ class TTS():
 
                 rospy.loginfo(f"PIPER: {content}")
                 self.tts_process = subprocess.Popen([
-                        "aplay", "-r", "16000", "-f", "S16_LE", "-t", "raw" 
+                        "aplay", "-r", str(self.piper_bitrate), "-f", "S16_LE", "-t", "raw" 
                     ], stdin=subprocess.PIPE)
                 
                 synthesized_buffer = self.piper_voice.synthesize_stream_raw(content)
@@ -175,12 +201,14 @@ class TTS():
 
 
         def on_llm_response(data):
+            if not self.is_active:
+                rospy.loginfo("TTS recieved message but is not active.")
+                stt_control(is_on=True)
+                return
             if self.tts_method == 0:
                 run_tts_piper(str(data.data))
             elif self.tts_method == 1:
-                print("got tts request")
                 run_tts_espeak(str(data.data))
-                print("out of tts func")
             else:
                 raise NotImplementedError("Unknown TTS Method.")
 
