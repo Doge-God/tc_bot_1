@@ -29,6 +29,7 @@ class LLMManager():
     def __init__(self) -> None:
         self.OPEN_AI_KEY = os.getenv("OPEN_AI_KEY")
         self.LOG_FILE_PATH = "/home/adam/Desktop/conversation_logs.txt"
+        self.IMG_DIR = "/home/adam/Desktop/images"
         self.add_log_entry(" ======== LLM MANAGER RESTARTED: NEW SESSION ========")
 
         # self.INTERACTION_BASE_SYSTEM_PROMPT = "You are a robot, you can hear, see, and move around. You give very brief responses. Omit any formatting in your response."
@@ -82,7 +83,8 @@ class LLMManager():
             {
                 "type":"image_url",
                 "image_url": {
-                    "url":f"data:image/jpeg;base64,{base64_img}"
+                    "url":f"data:image/jpeg;base64,{base64_img}",
+                    "detail": "low"
                 }
             }
         ]}
@@ -115,6 +117,13 @@ class LLMManager():
             ros_img:CompressedImage = rospy.wait_for_message("/camera/rgb/image_raw/compressed",CompressedImage)
             cv_img = self.bridge.compressed_imgmsg_to_cv2(ros_img, desired_encoding='passthrough')
             _, buffer = cv2.imencode('.jpg', cv_img)
+
+            timestamp = datetime.datetime.now().strftime("IMG-%Y-%m-%d%H:%M:%S")
+            # Format the string to include the timestamp
+            formatted_string = f"{timestamp}"
+            # Open the file in append mode and write the formatted string
+            cv2.imwrite(f"{self.IMG_DIR}/{formatted_string}.jpg",cv_img)
+
             base64_img = base64.b64encode(buffer).decode('utf-8')
             return base64_img
 
