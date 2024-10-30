@@ -51,6 +51,8 @@ class TTS():
                              os.path.expanduser("~/piper/models/it_IT-paola-medium.onnx"),
                              os.path.expanduser("~/piper/models/de_DE-thorsten-high.onnx"),
                              os.path.expanduser("~/piper/models/en_US-ryan-high.onnx"),
+                             os.path.expanduser("~/piper/models/zh_CN-huayan-medium.onnx"),
+
                              ]
          
 

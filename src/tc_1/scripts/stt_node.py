@@ -84,7 +84,6 @@ class STTDeepgram():
         self.is_pausing = False # controlled by tts and such
         self.is_exiting = False
         self.is_manual_stopped = False
-        self.should_restart_stt = True
 
         self.stt_sentence_pub = None
 
@@ -134,8 +133,7 @@ class STTDeepgram():
         def on_error(sdk_self, error, **kwargs):
             rospy.logerr(f"\n\n{error}\n\n")
             # set flags for exiting audio sending loop 
-            self.should_restart_stt = True
-            self.is_exiting = True
+            # self.is_exiting = True
             # stop audio stream
             self.audio_handler.stop_audio_stream()
             self.audio_handler = None  
