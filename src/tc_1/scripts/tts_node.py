@@ -37,20 +37,41 @@ class TTS():
         self.tts_process = None
 
         # Piper setup
-        model_path = os.path.expanduser("~/piper/models/en_US-amy-low.onnx")
+        model_path = os.path.expanduser("~/piper/models/en_GB-alan-medium.onnx")
         self.piper_voice = PiperVoice.load(model_path)
 
         self.tts_methods = ["piper", "espeak"]
 
-        self.piper_voices = [os.path.expanduser("~/piper/models/en_US-amy-medium.onnx"), 
-                             os.path.expanduser("~/piper/models/en_US-danny-low.onnx"),
-                             os.path.expanduser("~/piper/models/en_GB-cori-high.onnx"),
+        self.piper_voices = [
                              os.path.expanduser("~/piper/models/en_GB-alan-medium.onnx"),
                              os.path.expanduser("~/piper/models/en_GB-alba-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_GB-aru-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_GB-cori-high.onnx"),
                              os.path.expanduser("~/piper/models/en_GB-jenny_dioco-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_GB-northern_english_male-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_GB-semaine-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_GB-southern_english_female-low.onnx"),
+                             os.path.expanduser("~/piper/models/en_GB-vctk-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-amy-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-arctic-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-bryce-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-danny-low.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-hfc_female-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-hfc_male-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-joe-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-john-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-kathleen-low.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-kristin-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-kusal-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-l2arctic-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-lessac-high.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-libritts-high.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-libritts_r-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-ljspeech-high.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-norman-medium.onnx"),
+                             os.path.expanduser("~/piper/models/en_US-ryan-high.onnx"),
                              os.path.expanduser("~/piper/models/it_IT-paola-medium.onnx"),
                              os.path.expanduser("~/piper/models/de_DE-thorsten-high.onnx"),
-                             os.path.expanduser("~/piper/models/en_US-ryan-high.onnx"),
                              os.path.expanduser("~/piper/models/zh_CN-huayan-medium.onnx"),
 
                              ]

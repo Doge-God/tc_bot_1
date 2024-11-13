@@ -161,7 +161,7 @@ function SimpleServiceCallPanel({ context }: { context: PanelExtensionContext })
           style={{ width: "100%", minHeight: "2rem" }}
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onClick={async () => {
-            await callService(settingState.service.serviceName, `{"${settingState.service.fieldName}":"${state.request.replace(/(\r\n|\n|\r|\\|\t|⸓|\"")/gm,"")}"}`);
+            await callService(settingState.service.serviceName, `{"${settingState.service.fieldName}":"${state.request.replace(/(\r\n|\n|\r|\\|\t|⸓|")/gm,"")}"}`);
           }}
         >
           {`Call Service`}
