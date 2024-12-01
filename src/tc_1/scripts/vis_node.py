@@ -9,6 +9,7 @@ class Vis():
     def __init__(self) -> None:
         self.is_showing_vis_ctx = True
         self.is_active = True
+        self.current_visual_context = "No visual context."
 
     def print_header(self):
         print(f'''
@@ -33,6 +34,8 @@ class Vis():
         # is_using_header = rospy.get_param('~is_using_header')
         is_limited_to_one_exchange = True if int(rospy.get_param('~is_one_exchange_only', 0)) == 1 else False
 
+        PRINT_VISUAL_CONTEXT_ASAP = False
+
         os.system("clear")
 
         def on_llm_response(data):
@@ -45,13 +48,21 @@ class Vis():
             if self.is_active:
                 if is_limited_to_one_exchange:
                     os.system("clear")
+                    if self.is_showing_vis_ctx and (not PRINT_VISUAL_CONTEXT_ASAP):
+                        print(f"\n >> NEW VISUAL CONTEXT: {self.current_visual_context} \n")
+                    
+
                 print(f"> {user_tag}: {str(data.data).strip()} \n")
         rospy.Subscriber("/stt_sentence", String, on_user_speech)
         
 
         def on_img_description(data):
             if self.is_showing_vis_ctx and self.is_active:
-                print(f"\n >> NEW VISUAL CONTEXT: {str(data.data).strip()} \n")
+                self.current_visual_context = str(data.data).strip()
+
+                if PRINT_VISUAL_CONTEXT_ASAP:
+                    print(f"\n >> NEW VISUAL CONTEXT: {str(data.data).strip()} \n")
+
         rospy.Subscriber("/img_description", String, on_img_description)
 
 

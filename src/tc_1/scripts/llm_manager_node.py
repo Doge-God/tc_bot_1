@@ -215,13 +215,15 @@ class LLMManager():
             try:
                 response = self.get_gpt_response(message_log_w_sys_prompt)
                 llm_sentence_pub.publish(response)
+
+                # Log entries
+                if self.LOG_FILE_PATH:
+                    self.add_log_entry(f"User: {str(data.data)}")
+                    self.add_log_entry(f"Response: {response}")
             except:
                 rospy.logerr("LLM manager: OpenAI API call failed. Consider manual override.")
             
-            # Log entries
-            if self.LOG_FILE_PATH:
-                self.add_log_entry(f"User: {str(data.data)}")
-                self.add_log_entry(f"Response: {response}")
+            
 
         rospy.Subscriber("stt_sentence", String, on_user_speech)
 
