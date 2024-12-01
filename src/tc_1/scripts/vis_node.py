@@ -49,7 +49,7 @@ class Vis():
                 if is_limited_to_one_exchange:
                     os.system("clear")
                     if self.is_showing_vis_ctx and (not PRINT_VISUAL_CONTEXT_ASAP):
-                        print(f"\n >> CONTEXT: {self.current_visual_context} \n")
+                        print(f"\n>> CONTEXT: {self.current_visual_context} \n")
                     
 
                 print(f"> {user_tag}: {str(data.data).strip()} \n")
@@ -61,7 +61,7 @@ class Vis():
                 self.current_visual_context = str(data.data).strip()
 
                 if PRINT_VISUAL_CONTEXT_ASAP:
-                    print(f"\n >> CONTEXT: {str(data.data).strip()} \n")
+                    print(f"\n>> CONTEXT: {str(data.data).strip()} \n")
 
         rospy.Subscriber("/img_description", String, on_img_description)
 
