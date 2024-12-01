@@ -225,7 +225,9 @@ class STTDeepgram():
                         
                         
                     # send data over stream
+                    print("Sending")
                     dg_connection.send(data)
+                    print("Finished sending")
 
                 # close connection
                 dg_connection.finish()
