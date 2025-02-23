@@ -31,6 +31,10 @@ class TTS():
 
         ###### Piper Parameters
         self.piper_voice_key = 0  # Choices of Piper voices
+        self.piper_length_scale = 1.0
+        self.piper_sentence_silence = 0.0
+        self.piper_noise_scale = None
+        self.piper_noise_w = None
         
         ###### STT Control 
         self.should_manage_stt = False
@@ -82,14 +86,22 @@ class TTS():
         This callback will be called whenever parameters are updated via dynamic reconfigure.
         """
         
+        # espeak settings
         self.volume = config["volume"]
         self.pitch = config["pitch"]
         self.speed = config["speed"]
         self.capital_behavior = config["capital_behaviour"]
         self.voice = config["voice"]
+        # overall settings
         self.tts_method = config["tts_method"]
+        # piper settings
         self.piper_voice = PiperVoice.load(self.piper_voices[config["piper_voice"]])
         self.piper_bitrate = config["piper_bitrate"]
+        self.piper_length_scale = config["length_scale"] 
+        self.piper_sentence_silence = config["sentence_silence"]      
+        self.piper_noise_scale = config["noise_scale"] if config["noise_scale"] >= 0 else None
+        self.piper_noise_w = config["noise_w"] if config["noise_w"] >= 0 else None
+            
 
         rospy.loginfo("Reconfigured TTS.")
 
@@ -203,7 +215,13 @@ class TTS():
                         "aplay", "-r", str(self.piper_bitrate), "-f", "S16_LE", "-t", "raw" 
                     ], stdin=subprocess.PIPE)
                 
-                synthesized_buffer = self.piper_voice.synthesize_stream_raw(content)
+                synthesized_buffer = self.piper_voice.synthesize_stream_raw(
+                    content,
+                    length_scale = self.piper_length_scale,
+                    noise_scale = self.piper_noise_scale,
+                    noise_w = self.piper_noise_w,
+                    sentence_silence = self.piper_sentence_silence
+                )
                 
                 try: 
                     for data in synthesized_buffer:
