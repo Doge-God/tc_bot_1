@@ -1,0 +1,269 @@
+{
+  "configById": {
+    "simple_service_caller.SimpleServiceCall!1wsgk1b": {
+      "service": {
+        "label": "Data",
+        "serviceName": "/update_visual_context",
+        "fieldName": "visualPrompt",
+        "visible": true
+      },
+      "foxglovePanelTitle": "Visual Context"
+    },
+    "Publish!6wytkn": {
+      "buttonText": "VIS MASTER",
+      "buttonTooltip": "",
+      "advancedView": false,
+      "value": "{\n  \"data\": true\n}",
+      "topicName": "/visualize",
+      "datatype": "std_msgs/Bool",
+      "buttonColor": "#267522"
+    },
+    "Publish!96z242": {
+      "buttonText": "VIS MASTER",
+      "buttonTooltip": "",
+      "advancedView": false,
+      "value": "{\n  \"data\": false\n}",
+      "topicName": "/visualize",
+      "datatype": "std_msgs/Bool",
+      "buttonColor": "#d33f3f"
+    },
+    "Publish!2ympn6b": {
+      "buttonText": "VIS CTX",
+      "buttonTooltip": "",
+      "advancedView": false,
+      "value": "{\n  \"data\": true\n}",
+      "topicName": "/show_vis_ctx",
+      "datatype": "std_msgs/Bool",
+      "buttonColor": "#267522"
+    },
+    "Publish!1ojeluj": {
+      "buttonText": "VIS CTX",
+      "buttonTooltip": "",
+      "advancedView": false,
+      "value": "{\n  \"data\": false\n}",
+      "topicName": "/show_vis_ctx",
+      "datatype": "std_msgs/Bool",
+      "buttonColor": "#d33f3f"
+    },
+    "Publish!3kkmzv2": {
+      "buttonText": "CLEAR VIS",
+      "buttonTooltip": "",
+      "advancedView": false,
+      "value": "{\n  \"data\": true\n}",
+      "topicName": "/clear_visualization",
+      "datatype": "std_msgs/Bool",
+      "buttonColor": "#d33f3f"
+    },
+    "simple_service_caller.SimpleServiceCall!1v0a40f": {
+      "service": {
+        "label": "Data",
+        "serviceName": "/update_system_prompt",
+        "fieldName": "systemPrompt",
+        "visible": true
+      },
+      "foxglovePanelTitle": "System Prompt"
+    },
+    "CallService!2547lx0": {
+      "requestPayload": "{}",
+      "layout": "horizontal",
+      "timeoutSeconds": 10,
+      "serviceName": "/clear_chat_log",
+      "foxglovePanelTitle": "Update System Prompt",
+      "editingMode": false,
+      "buttonText": "CLEAR CHATLOG",
+      "buttonColor": "#d33f3f",
+      "buttonTooltip": "Perform cyber lobotomy"
+    },
+    "CallService!1d1ht2f": {
+      "requestPayload": "{}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/control/stop_tts",
+      "editingMode": false,
+      "buttonText": "* INTERRUPT *",
+      "buttonColor": "#d63e3e",
+      "foxglovePanelTitle": "Interrupt TTS"
+    },
+    "Tab!efthz1": {
+      "activeTabIdx": 0,
+      "tabs": [
+        {
+          "layout": {
+            "first": "simple_service_caller.SimpleServiceCall!1wsgk1b",
+            "second": {
+              "first": {
+                "first": {
+                  "first": "Publish!6wytkn",
+                  "second": "Publish!96z242",
+                  "direction": "row"
+                },
+                "second": {
+                  "first": {
+                    "first": "Publish!2ympn6b",
+                    "second": "Publish!1ojeluj",
+                    "direction": "row"
+                  },
+                  "second": "Publish!3kkmzv2",
+                  "direction": "column"
+                },
+                "direction": "column",
+                "splitPercentage": 36.44296542799039
+              },
+              "second": {
+                "first": "simple_service_caller.SimpleServiceCall!1v0a40f",
+                "second": {
+                  "first": "CallService!2547lx0",
+                  "second": "CallService!1d1ht2f",
+                  "direction": "column"
+                },
+                "direction": "row",
+                "splitPercentage": 78.96175287279506
+              },
+              "direction": "row",
+              "splitPercentage": 26.486486486486484
+            },
+            "direction": "row",
+            "splitPercentage": 43.33843797856049
+          },
+          "title": ""
+        }
+      ]
+    },
+    "simple_service_caller.SimpleServiceCall!3tm9vil": {
+      "service": {
+        "label": "Data",
+        "serviceName": "/inject_user_input",
+        "fieldName": "fakeUserInput",
+        "visible": true
+      },
+      "foxglovePanelTitle": "LISTEN"
+    },
+    "CallService!3xuyc1": {
+      "requestPayload": "{\"isSttActive\":true}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/stt_manual_control",
+      "editingMode": false,
+      "buttonText": "LISTEN",
+      "buttonColor": "#267522",
+      "foxglovePanelTitle": " STT Control"
+    },
+    "CallService!u5xjhe": {
+      "requestPayload": "{\"isSttActive\":false}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/stt_manual_control",
+      "editingMode": false,
+      "buttonText": "LISTEN",
+      "buttonColor": "#d33f3f",
+      "foxglovePanelTitle": "STT Control"
+    },
+    "simple_service_caller.SimpleServiceCall!2brmzrc": {
+      "service": {
+        "label": "Data",
+        "serviceName": "/inject_llm_response",
+        "fieldName": "fakeLLMResponse",
+        "visible": true
+      },
+      "foxglovePanelTitle": "SPEAK"
+    },
+    "CallService!lwqxmw": {
+      "requestPayload": "{\"isTtsActive\":true}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/control/tts_control",
+      "editingMode": false,
+      "buttonText": "SPEAK",
+      "buttonTooltip": "",
+      "buttonColor": "#267522",
+      "foxglovePanelTitle": "TTS Control"
+    },
+    "CallService!2i52oxz": {
+      "requestPayload": "{\"isTtsActive\":false}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/control/tts_control",
+      "editingMode": false,
+      "buttonText": "SPEAK",
+      "buttonColor": "#d33f3f",
+      "foxglovePanelTitle": "TTS Control"
+    },
+    "RosOut!gul3gt": {
+      "searchTerms": [],
+      "minLogLevel": 1,
+      "nameFilter": {},
+      "topicToRender": "/rosout"
+    },
+    "Gauge!2farsr4": {
+      "path": "/mobile_base/sensors/core.battery",
+      "minValue": 106,
+      "maxValue": 146,
+      "colorMap": "red-yellow-green",
+      "colorMode": "colormap",
+      "gradient": [
+        "#0000ff",
+        "#ff00ff"
+      ],
+      "reverse": false
+    }
+  },
+  "globalVariables": {
+    "globalVariable": 3
+  },
+  "userNodes": {
+    "0a07a7c3-aec0-4a30-8e63-ea692e6e8a3e": {
+      "sourceCode": "// The ./types module provides helper types for your Input events and messages.\nimport { Input, Message } from \"./types\";\n\n// Your script can output well-known message types, any of your custom message types, or\n// complete custom message types.\n//\n// Use `Message` to access types from the schemas defined in your data source:\n// type Twist = Message<\"geometry_msgs/Twist\">;\n//\n// Import from the @foxglove/schemas package to use foxglove schema types:\n// import { Pose, LocationFix } from \"@foxglove/schemas\";\n//\n// Conventionally, it's common to make a _type alias_ for your script's output type\n// and use that type name as the return type for your script function.\n// Here we've called the type `Output` but you can pick any type name.\ntype Output = {\n  hello: string;\n};\n\n// These are the topics your script \"subscribes\" to. Studio will invoke your script function\n// when any message is received on one of these topics.\nexport const inputs = [\"/input/topic\"];\n\n// Any output your script produces is \"published\" to this topic. Published messages are only visible within Studio, not to your original data source.\nexport const output = \"/studio_script/output_topic\";\n\n// This function is called with messages from your input topics.\n// The first argument is an event with the topic, receive time, and message.\n// Use the `Input<...>` helper to get the correct event type for your input topic messages.\nexport default function script(event: Input<\"/input/topic\">): Output {\n  return {\n    hello: \"world!\",\n  };\n};",
+      "name": "0a07a7c3"
+    },
+    "1f0171a8-fc8b-4526-a829-d425f5376ad0": {
+      "sourceCode": "import { Input, Message } from \"./types\";\n\ntype Output = {};\n\nexport const inputs = [\"/topic\"];\nexport const output = \"/studio_script/output_topic\";\n\nexport default function script(event: Input<\"/topic\">): Output {\n  return {};\n};\n",
+      "name": "1f0171a8"
+    },
+    "3479a241-bf48-4ba9-8bc9-b49ae54126e9": {
+      "sourceCode": "// This example shows how to publish a Marker message from a User Script.\n//\n// Publishing Marker messages with a User Script is a good way to visualize non-visual\n// data.\n//\n// For example, if your robot calculates some projected paths and publishes them between two\n// subsystems as a message, you can make a script that visualizes the path as a line list marker and view it in the 3D\n// panel.\n\nimport { Input, Message } from \"./types\";\n\n// The `./markers` utility provides a helper function to build a Marker.\nimport { buildRosMarker, MarkerTypes } from \"./markers\";\n\ntype GlobalVariables = { id: number };\n\nexport const inputs = [\"/input/topic\"];\nexport const output = \"/studio_script/my_custom_topic\";\n\n// Our script will output a Marker message.\ntype Marker = Message<\"visualization_msgs/Marker\">;\n\n// If you want to output multiple markers for a single input message, use a MarkerArray.\n// The marker array message has one field, `markers`, which is an array of Marker messaages.\n// type MarkerArray = Message<\"visualization_msgs/MarkerArray\">;\n\nexport default function script(event: Input<\"/input/topic\">, globalVars: GlobalVariables): Marker {\n  return buildRosMarker({\n      // Add any fields you want to set in the marker here\n      // Any fields you omit will use default values\n      // e.g 'type: MarkerTypes.ARROW' */\n  });\n};\n",
+      "name": "3479a241"
+    }
+  },
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": {
+    "first": {
+      "first": "Tab!efthz1",
+      "second": {
+        "first": {
+          "first": "simple_service_caller.SimpleServiceCall!3tm9vil",
+          "second": {
+            "first": "CallService!3xuyc1",
+            "second": "CallService!u5xjhe",
+            "direction": "row"
+          },
+          "direction": "column",
+          "splitPercentage": 78.97015449976207
+        },
+        "second": {
+          "first": "simple_service_caller.SimpleServiceCall!2brmzrc",
+          "second": {
+            "first": "CallService!lwqxmw",
+            "second": "CallService!2i52oxz",
+            "direction": "row"
+          },
+          "direction": "column",
+          "splitPercentage": 78.97015449976207
+        },
+        "direction": "row",
+        "splitPercentage": 48.70334522533476
+      },
+      "direction": "column",
+      "splitPercentage": 47.81448406026463
+    },
+    "second": {
+      "first": "RosOut!gul3gt",
+      "second": "Gauge!2farsr4",
+      "direction": "row",
+      "splitPercentage": 94.5226917057903
+    },
+    "direction": "column",
+    "splitPercentage": 81.87830687830689
+  }
+}
