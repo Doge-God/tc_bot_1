@@ -217,7 +217,7 @@ class TTS():
                 
                 synthesized_buffer = self.piper_voice.synthesize_stream_raw(
                     content,
-                    length_scale = self.piper_length_scale,
+                    length_scale = 1 / self.piper_length_scale,
                     noise_scale = self.piper_noise_scale,
                     noise_w = self.piper_noise_w,
                     sentence_silence = self.piper_sentence_silence
