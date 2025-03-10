@@ -34,11 +34,11 @@ class LLMManager():
 
         # self.INTERACTION_BASE_SYSTEM_PROMPT = "You are a robot, you can hear, see, and move around. You give very brief responses. Omit any formatting in your response."
 
-        self.additional_system_prompt = "You talk like HAL9000"
+        self.additional_system_prompt = "You are a robot. Your name is bff. You can see, hear and move around. You speak like a robot and keep your responses brief."
         self.visual_context_string = ""
         self.interaction_system_prompt = {
             "role": "system",
-            "content": f"{self.additional_system_prompt} This is what you see: {self.visual_context_string}"
+            "content": f"{self.additional_system_prompt} This is what you see: #{self.visual_context_string}#"
         }
         self.message_log = deque([], maxlen=30)
         self.open_ai_client = OpenAI(api_key=self.OPEN_AI_KEY)
@@ -69,7 +69,7 @@ class LLMManager():
     def refresh_system_prompt(self):
         self.interaction_system_prompt = {
             "role": "system",
-            "content": f"{self.additional_system_prompt} This is what you see: {self.visual_context_string}"
+            "content": f"{self.additional_system_prompt} This is what you see: #{self.visual_context_string}#"
         }
 
     def create_user_msg(self,msg:str):
