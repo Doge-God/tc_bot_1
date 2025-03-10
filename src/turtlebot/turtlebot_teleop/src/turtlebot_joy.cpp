@@ -71,8 +71,9 @@ TurtlebotTeleop::TurtlebotTeleop():
   ph_.param("axis_deadman", deadman_axis_, deadman_axis_);
   ph_.param("scale_angular", a_scale_, a_scale_);
   ph_.param("scale_linear", l_scale_, l_scale_);
-
-  deadman_pressed_ = false;
+  //////// Disable Deadman Switch
+  //deadman_pressed_ = false;
+  deadman_pressed_ = true;
   zero_twist_published_ = false;
 
   vel_pub_ = ph_.advertise<geometry_msgs::Twist>("cmd_vel", 1, true);
@@ -87,7 +88,9 @@ void TurtlebotTeleop::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
   vel.angular.z = a_scale_*joy->axes[angular_];
   vel.linear.x = l_scale_*joy->axes[linear_];
   last_published_ = vel;
-  deadman_pressed_ = joy->buttons[deadman_axis_];
+ //////// Disable Deadman Switch
+ // deadman_pressed_ = joy->buttons[deadman_axis_];
+ deadman_pressed_ = true;
 }
 
 void TurtlebotTeleop::publish()
@@ -99,11 +102,12 @@ void TurtlebotTeleop::publish()
     vel_pub_.publish(last_published_);
     zero_twist_published_=false;
   }
-  else if(!deadman_pressed_ && !zero_twist_published_)
-  {
-    vel_pub_.publish(*new geometry_msgs::Twist());
-    zero_twist_published_=true;
-  }
+  //////// Disable Deadman Switch
+  // else if(!deadman_pressed_ && !zero_twist_published_)
+  // {
+  //   vel_pub_.publish(*new geometry_msgs::Twist());
+  //   zero_twist_published_=true;
+  // }
 }
 
 int main(int argc, char** argv)
