@@ -28,6 +28,10 @@ def play_video(video_index):
 root = tk.Tk()
 root.title("Face Changer")  # Set the window title
 
+# Set the window icon with a .png file (replace 'icon.png' with your file path)
+icon_image = tk.PhotoImage(file='/home/adam/tc_bot_1/eyeicon.png')  # Path to your PNG icon
+root.iconphoto(True, icon_image)  # Set the icon for the window
+
 # Create a grid of buttons (1-10)
 for i in range(10):
     # Each button is labeled with the number (1-10)
