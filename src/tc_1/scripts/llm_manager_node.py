@@ -190,9 +190,9 @@ class LLMManager():
 
 
         def on_user_speech(data):
-            self.beep(440, 0.05)
-            self.beep(340, 0.05)
-            self.beep(440, 0.05)
+            ### self.beep(440, 0.05)
+            ### self.beep(340, 0.05)
+            ### self.beep(440, 0.05)
             try:
                 set_stt_active = rospy.ServiceProxy("stt_control", SttControl)
                 set_stt_active(False)
