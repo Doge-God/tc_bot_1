@@ -6,7 +6,7 @@ HOST = "192.168.1.2"  # Host IP
 PORT = "9999"  # Port for VLC RC interface
 
 # List of videos to choose from (corresponding to numbers 1-10)
-videos = [f"tc_bot_1/faces/{i}.mp4" for i in range(1, 11)]
+videos = [f"faces/{i}.mp4" for i in range(1, 11)]
 
 # Function to send commands via nc (Netcat)
 def send_command(command):
