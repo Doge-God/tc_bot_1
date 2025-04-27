@@ -13,11 +13,11 @@
 
 #####  Calm
 # Mandatory parameters
-speed_lim_v: 0.3
-speed_lim_w: 1
+speed_lim_v: 0.6
+speed_lim_w: 7
 
-accel_lim_v: 0.3 # maximum is actually 2.0, but we push it down to be smooth
-accel_lim_w: 3
+accel_lim_v: 1.0 # maximum is actually 2.0, but we push it down to be smooth
+accel_lim_w: 9
 
 ##### Very Calm
 # Mandatory parameters
@@ -30,7 +30,7 @@ accel_lim_w: 3
 
 # Optional parameters
 frequency: 20.0
-decel_factor: 0.5
+decel_factor: 1.0
 
 # Robot velocity feedback type:
 #  0 - none (default)

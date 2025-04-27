@@ -83,7 +83,7 @@ class STTDeepgram():
         self.current_sentence = ""
         self.is_pausing = False # controlled by tts and such
         self.is_exiting = False
-        self.is_manual_stopped = False
+        self.is_manual_stopped = True
 
         self.stt_sentence_pub = None
 
@@ -219,6 +219,8 @@ class STTDeepgram():
                         self.audio_handler.clear_audio_queue()
                         while self.is_manual_stopped or self.is_pausing:
                             dg_connection.keep_alive()
+                            if self.is_exiting:
+                                break
 
                         self.audio_handler.unpause_stream()
                         
