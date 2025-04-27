@@ -1,0 +1,43 @@
+!!python/object/new:dynamic_reconfigure.encoding.Config
+dictitems:
+  ESPEAK_SETTINGS_______: .
+  PIPER_SETTINGS: 'Low: 16000 Khz, Med & H: 22050 Khz'
+  capital_behaviour: 1.0
+  groups: !!python/object/new:dynamic_reconfigure.encoding.Config
+    dictitems:
+      ESPEAK_SETTINGS_______: .
+      PIPER_SETTINGS: 'Low: 16000 Khz, Med & H: 22050 Khz'
+      capital_behaviour: 1.0
+      groups: !!python/object/new:dynamic_reconfigure.encoding.Config
+        state: []
+      id: 0
+      length_scale: 0.7
+      name: Default
+      noise_scale: 1.0
+      noise_w: -1.0
+      parameters: !!python/object/new:dynamic_reconfigure.encoding.Config
+        state: []
+      parent: 0
+      piper_bitrate: 22050
+      piper_voice: 4
+      pitch: 50.0
+      sentence_silence: 1.2
+      speed: 185.0
+      state: true
+      tts_method: 0
+      type: ''
+      voice: en+f4
+      volume: 100.0
+    state: []
+  length_scale: 0.7
+  noise_scale: 1.0
+  noise_w: -1.0
+  piper_bitrate: 22050
+  piper_voice: 4
+  pitch: 50.0
+  sentence_silence: 1.2
+  speed: 185.0
+  tts_method: 0
+  voice: en+f4
+  volume: 100.0
+state: []
